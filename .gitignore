@@ -1,0 +1,5 @@
+base-de-donnees.db
+
+# fichiers liées à Python
+__pycache__
+*.pyc
