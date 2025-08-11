@@ -1,0 +1,57 @@
+import base64
+import datetime
+import os
+import urllib.parse
+import http.cookies
+
+import base_de_donnees
+
+
+sessions_par_id = dict()
+
+
+def traiter_requete_connection(donnees: bytes):
+    formulaire = urllib.parse.parse_qs(donnees.decode())
+
+    # chaque valeur de "formulaire" est une liste
+    # parce que en HTTP un "query parameter" peut être présent plusieur fois;
+    # exemple: "http://httpbin.org/get?test=lol&test=toto"
+
+    utilisateur = formulaire["utilisateur"][0]
+
+    mot_de_passe = formulaire["mot_de_passe"][0]
+
+    attendu = base_de_donnees.mot_de_passe_utilisateur(utilisateur)
+
+    if mot_de_passe != attendu:
+        return None
+
+    id_session = base64.b64encode(os.urandom(16)).decode()
+
+    sessions_par_id[id_session] = {
+        "utilisateur": utilisateur,
+    }
+
+    return f"session={id_session}"
+
+
+def authentifier_headers(cookies):
+    c = http.cookies.SimpleCookie()
+    c.load(cookies)
+
+    cookie = c.get("session", None)
+
+    if not cookie:
+        return None
+    
+    id_session = cookie.value
+
+    if not id_session:
+        return None
+    
+    session = sessions_par_id[id_session]
+
+    return session["utilisateur"]
+
+
+

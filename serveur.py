@@ -3,38 +3,66 @@ import json
 import socketserver
 import urllib.parse
 
+import authentification
 import base_de_donnees
 
 
 PORT = 8000
 
+CHEMIN_FICHIERS_STATIQUES = "fichiers-statiques"
+
 
 base_de_donnees.initialisation()
 
 
-class Handler(http.server.BaseHTTPRequestHandler):
-    def do_GET(self):
-        print(self.request_version)
+class Handler(http.server.SimpleHTTPRequestHandler):
+    def __init__(self, *args):
+        super().__init__(*args, directory=CHEMIN_FICHIERS_STATIQUES)
+
+    def do_POST(self):
         path = urllib.parse.urlparse(self.path)
 
-        if path.path != "/api/messages":
-            self.send_error(http.HTTPStatus.NOT_FOUND)
-            return
+        if path.path == "/authentification":
+            content_length = int(self.headers.get('Content-Length', 0))
+            set_cookie = authentification.traiter_requete_connection(self.rfile.read(content_length))
 
-        utilisateur = self.headers["authorization"]
+            if not set_cookie:
+                self.send_error(http.HTTPStatus.UNAUTHORIZED)
+                return
+
+            self.send_response(http.HTTPStatus.FOUND)
+            self.send_header("Set-Cookie", set_cookie)
+            self.send_header("Location", "/messagerie.html")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+
+        else:
+            self.send_error(http.HTTPStatus.NOT_FOUND)
+
+    def do_GET(self):
+        path = urllib.parse.urlparse(self.path)
+
+        if path.path == "/api/messages":
+            query = urllib.parse.parse_qs(path.query)
+            self.liste_messages(query)
+        else:
+            # on appelle la méthode "do_GET" de la class parente (SimpleHTTPRequestHandler)
+            # qui sert des fichiers depuis un dossier
+            super().do_GET()
+
+    def liste_messages(self, query):
+        utilisateur = authentification.authentifier_headers(self.headers["cookie"])
         
         if not utilisateur:
             self.send_error(http.HTTPStatus.UNAUTHORIZED)
             return
-
-        query = urllib.parse.parse_qs(path.query)
 
         if "correspondant" not in query:
             self.send_error(http.HTTPStatus.BAD_REQUEST)
             return
 
         # query["correspondant"] est une liste
-        # parce que en HTTP un query parameter peut être présent plusieur fois
+        # parce que en HTTP un "query parameter" peut être présent plusieur fois:
         # exemple: "http://httpbin.org/get?test=lol&test=toto"
         correspondant = query["correspondant"][0]
 
@@ -60,7 +88,11 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.wfile.write(corps_reponse.encode())
 
 
-with socketserver.TCPServer(("", PORT), Handler) as httpd:
+class ReusableTCPServer(socketserver.TCPServer):
+    allow_reuse_address = True
+
+
+with ReusableTCPServer(("", PORT), Handler) as httpd:
     print("service en cours port", PORT)
     httpd.serve_forever()
 

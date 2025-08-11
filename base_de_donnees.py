@@ -38,3 +38,22 @@ def obtenir_messages(auteur, destinataire):
     connection.close()
 
     return messages
+
+
+def mot_de_passe_utilisateur(utilisateur):
+    connection = sqlite3.connect(CHEMIN_BASE_DE_DONNEES)
+
+    requete = f"""
+        SELECT mot_de_passe
+        FROM utilisateurs
+        WHERE pseudo = '{utilisateur}'
+    """
+
+    print("requete: ", requete)
+
+    ligne = connection.execute(requete).fetchone()
+
+    connection.close()
+
+    return ligne[0]
+    

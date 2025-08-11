@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messagerie</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <style>
+        input {
+            min-width: min(40em, 100vw);
+        }
+    </style>
+</head>
+<body>
+    <h1>Messagerie</h1>
+
+    <form id="formulaire">
+        <label for="correspondant">correspondant: </label>
+        <input type="text" name="correspondant" id="correspondant">
+        <button type="submit">voir les messages</button>
+    </form>
+
+    <pre id="messages"></pre>
+
+    <script>
+        document.getElementById("formulaire").addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const data = new FormData(event.target);
+            let correspondant = data.get("correspondant");
+
+            fetch(`/api/messages?correspondant=${correspondant}`)
+                .then(response => response.json())
+                .then(messages => {
+                    document.getElementById("messages").innerText = "";
+
+                    for (const message of messages) {
+                        line = `${message.date} ${message.auteur}: ${message.contenu}`
+                        document.getElementById("messages").innerText += line + "\n\n"
+                    }
+                })
+
+            console.log({ data });
+        })
+    </script>
+</body>
+</html>
