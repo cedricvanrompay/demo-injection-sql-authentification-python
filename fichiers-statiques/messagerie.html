@@ -27,7 +27,7 @@
             event.preventDefault();
 
             const data = new FormData(event.target);
-            let correspondant = data.get("correspondant");
+            const correspondant = data.get("correspondant");
 
             fetch(`/api/messages?correspondant=${correspondant}`)
                 .then(response => response.json())

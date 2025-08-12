@@ -41,10 +41,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
     def do_GET(self):
         path = urllib.parse.urlparse(self.path)
+        query = urllib.parse.parse_qs(path.query)
 
         if path.path == "/api/messages":
-            query = urllib.parse.parse_qs(path.query)
             self.liste_messages(query)
+        elif path.path == "/api/utilisateurs":
+            self.liste_utilisateurs(query)
         else:
             # on appelle la méthode "do_GET" de la class parente (SimpleHTTPRequestHandler)
             # qui sert des fichiers depuis un dossier
@@ -84,6 +86,22 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
         corps_reponse = json.dumps(messages, indent=4, ensure_ascii=False)
+        
+        self.wfile.write(corps_reponse.encode())
+
+    def liste_utilisateurs(self, query):
+        # query["pseudo"] est une liste
+        # parce que en HTTP un "query parameter" peut être présent plusieur fois:
+        # exemple: "http://httpbin.org/get?test=lol&test=toto"
+        pseudo = query["pseudo"][0]
+
+        utilisateurs = base_de_donnees.trouver_utilisateur(pseudo)
+        
+        self.send_response(http.HTTPStatus.OK)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+
+        corps_reponse = json.dumps(utilisateurs, indent=4, ensure_ascii=False)
         
         self.wfile.write(corps_reponse.encode())
 

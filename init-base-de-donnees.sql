@@ -2,7 +2,8 @@
 
 CREATE TABLE utilisateurs (
     pseudo TEXT PRIMARY KEY NOT NULL,
-    mot_de_passe TEXT NOT NULL
+    mot_de_passe TEXT NOT NULL,
+    date_creation DATETIME NOT NULL
 );
 
 CREATE TABLE messages (
@@ -16,10 +17,10 @@ CREATE TABLE messages (
 
 -- données de test
 
-INSERT INTO utilisateurs(pseudo, mot_de_passe) VALUES
-    ("alice", "123test"),
-    ("bob", "456test"),
-    ("charlie", "789test")
+INSERT INTO utilisateurs(pseudo, mot_de_passe, date_creation) VALUES
+    ("alice", "123test", "2025-05-06 10:00:00"),
+    ("bob", "456test", "2025-05-08 15:00:00"),
+    ("charlie", "789test", "2025-05-09 11:00:00")
 ;
 
 INSERT INTO messages VALUES('2025-08-09 08:00:14','alice','bob','bonjour');

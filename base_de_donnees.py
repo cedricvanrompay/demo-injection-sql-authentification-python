@@ -49,11 +49,31 @@ def mot_de_passe_utilisateur(utilisateur):
         WHERE pseudo = '{utilisateur}'
     """
 
-    print("requete: ", requete)
+    print("requete:", requete)
 
     ligne = connection.execute(requete).fetchone()
 
     connection.close()
 
     return ligne[0]
+
+def trouver_utilisateur(pseudo):
+    connection = sqlite3.connect(CHEMIN_BASE_DE_DONNEES)
+
+    requete = f"SELECT pseudo, date_creation FROM utilisateurs WHERE pseudo = '{pseudo}'"
+
+    print("requete:", requete)
+
+    utilisateurs = list()
+    for ligne in connection.execute(requete):
+        pseudo, date_creation = ligne
+        utilisateurs.append({
+            "pseudo": pseudo,
+            "date_creation": date_creation,
+        })
+
+    connection.close()
+
+    return utilisateurs
+
     

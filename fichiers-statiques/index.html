@@ -37,5 +37,51 @@
             </li>
         </ul>
     </nav>
+
+
+    <h2>Trouver un utilisateurs</h2>
+
+    <form id="trouver-utilisateur">
+        <div>
+            <label for="pseudo">pseudo:</label>
+            <input type="text" name="pseudo" id="pseudo">
+        </div>
+        <button type="submit">chercher</button>
+    </form>
+
+    <script>
+        document.getElementById("trouver-utilisateur").addEventListener("submit", event => {
+            event.preventDefault();
+
+            const data = new FormData(event.target);
+
+            const pseudo = data.get("pseudo");
+
+            fetch(`/api/utilisateurs?pseudo=${pseudo}`)
+                .then(reponse => reponse.json())
+                .then(utilisateurs => {
+                    const ancienneListe = document.getElementById("liste-utilisateurs");
+                    if (ancienneListe != undefined) {
+                        ancienneListe.remove();
+                    }
+
+                    let listeUtilisateurs;
+
+                    if (!utilisateurs || utilisateurs.length == 0) {
+                        listeUtilisateurs = document.createElement("p");
+                        listeUtilisateurs.innerText("aucun utilisateur trouvé.")
+                    } else {
+                        listeUtilisateurs = document.createElement("ul");
+                        for (const utilisateur of utilisateurs) {
+                            listeUtilisateurs.innerHTML += `<li>${utilisateur["pseudo"]} (créé le ${utilisateur["date_creation"]})</li>`
+                        }
+                    }
+
+                    listeUtilisateurs.id = "liste-utilisateurs";
+
+                    document.body.appendChild(listeUtilisateurs);
+                })
+        })
+    </script>
 </body>
 </html>
