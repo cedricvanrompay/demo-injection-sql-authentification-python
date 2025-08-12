@@ -1,5 +1,4 @@
 import base64
-import datetime
 import os
 import urllib.parse
 import http.cookies
@@ -12,10 +11,6 @@ sessions_par_id = dict()
 
 def traiter_requete_connection(donnees: bytes):
     formulaire = urllib.parse.parse_qs(donnees.decode())
-
-    # chaque valeur de "formulaire" est une liste
-    # parce que en HTTP un "query parameter" peut être présent plusieur fois;
-    # exemple: "http://httpbin.org/get?test=lol&test=toto"
 
     utilisateur = formulaire["utilisateur"][0]
 
