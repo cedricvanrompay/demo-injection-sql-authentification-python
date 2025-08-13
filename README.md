@@ -12,6 +12,15 @@ principalement les injections SQL et l'authentification.
 L'application est une application de messagerie,
 où les utilisateurs peuvent avoir des conversations les uns avec les autres.
 
+Pour la lancer, il suffit d'avoir Python (Python 3) et de faire:
+
+```
+python serveur.py
+```
+
+Comme il n'y a besoin d'aucune autre librairie que la librairie standard,
+pas besoin d'utiliser `pip`, pas besoin d'environnement virtuel etc...
+
 La principale vulnérabilité de cette application
 est une [injection SQL][] dans la fonctionalité « Trouver un utilisateur »
 (sur la page d'accueil).

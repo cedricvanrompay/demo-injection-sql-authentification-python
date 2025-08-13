@@ -103,6 +103,6 @@ class ReusableTCPServer(socketserver.TCPServer):
 
 
 with ReusableTCPServer(("", PORT), Handler) as httpd:
-    print("service en cours port", PORT)
+    print(f"service en cours à l'addresse http://localhost:{PORT}")
     httpd.serve_forever()
 
