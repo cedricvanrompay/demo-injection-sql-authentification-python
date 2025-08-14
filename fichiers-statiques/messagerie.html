@@ -5,18 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messagerie</title>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link rel="stylesheet" href="style.css">
     <style>
         input {
-            min-width: min(40em, 100vw);
+            width: 100%;
         }
     </style>
 </head>
 <body>
     <h1>Messagerie</h1>
 
+    <a href="/">retour à l'acceuil</a>
+
     <form id="formulaire">
-        <label for="correspondant">correspondant: </label>
-        <input type="text" name="correspondant" id="correspondant">
+        <input type="text" name="correspondant" placeholder="correspondant">
         <button type="submit">voir les messages</button>
     </form>
 

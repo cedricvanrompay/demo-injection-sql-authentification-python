@@ -5,31 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Démonstration injection SQL et Authentification</title>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Accueil</h1>
 
-    <p>
-        ATTENTION: ce site Web est fait pour illustrer certaines vulnérabilités de sécurité.
-        Il a beaucoup de problèmes de sécurité,
-        ne pas ré-utiliser son code pour un vrai site Web.
-    </p>
-
     <form action="/authentification" method="POST">
-        <h2>Connection</h2>
-        <div>
-            <label for="utilisateur">utilisateur : </label>
-            <input type="text" name="utilisateur" id="utilisateur">
-        </div>
-        <div>
-            <label for="mot_de_passe">mot de passe : </label>
-            <input type="password" name="mot_de_passe" id="mot_de_passe">
-        </div>
+        <input type="text" name="utilisateur" placeholder="pseudo">
+        <input type="password" name="mot_de_passe" placeholder="mot de passe">
         <button type="submit">se connecter</button>
     </form>
 
-    <h2>Menu</h2>
-
+    
     <nav>
         <ul>
             <li>
@@ -38,13 +25,17 @@
         </ul>
     </nav>
 
+    <p>
+        ATTENTION: ce site Web est fait pour illustrer certaines vulnérabilités de sécurité.
+        Il a beaucoup de problèmes de sécurité,
+        ne pas ré-utiliser son code pour un vrai site Web.
+    </p>
 
     <h2>Trouver un utilisateur</h2>
 
     <form id="trouver-utilisateur">
         <div>
-            <label for="pseudo">pseudo:</label>
-            <input type="text" name="pseudo" id="pseudo">
+            <input type="text" name="pseudo" placeholder="pseudo">
         </div>
         <button type="submit">chercher</button>
     </form>
