@@ -43,11 +43,7 @@ def obtenir_messages(auteur, destinataire):
 def mot_de_passe_utilisateur(utilisateur):
     connection = sqlite3.connect(CHEMIN_BASE_DE_DONNEES)
 
-    requete = f"""
-        SELECT mot_de_passe
-        FROM utilisateurs
-        WHERE pseudo = '{utilisateur}'
-    """
+    requete = f"SELECT mot_de_passe FROM utilisateurs WHERE pseudo = '{utilisateur}'"
 
     print("requete:", requete)
 
@@ -56,6 +52,7 @@ def mot_de_passe_utilisateur(utilisateur):
     connection.close()
 
     return ligne[0]
+
 
 def trouver_utilisateur(pseudo):
     connection = sqlite3.connect(CHEMIN_BASE_DE_DONNEES)
