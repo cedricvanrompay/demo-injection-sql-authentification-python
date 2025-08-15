@@ -63,12 +63,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
         correspondant = query["correspondant"][0]
 
-        messages = base_de_donnees.obtenir_messages(
+        messages = base_de_donnees.lister_messages(
             auteur=utilisateur,
             destinataire=correspondant,
         )
 
-        messages = messages + base_de_donnees.obtenir_messages(
+        messages = messages + base_de_donnees.lister_messages(
             auteur=correspondant,
             destinataire=utilisateur,
         )

@@ -17,7 +17,7 @@ def initialisation():
     connection.close()
 
 
-def obtenir_messages(auteur, destinataire):
+def lister_messages(auteur, destinataire):
     connection = sqlite3.connect(CHEMIN_BASE_DE_DONNEES)
     
     messages = list()
