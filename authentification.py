@@ -1,9 +1,12 @@
 import base64
+import datetime
 import os
 import urllib.parse
 import http.cookies
 
 import base_de_donnees
+
+AGE_MAX_SESSION_JOURS = 60
 
 
 sessions_par_id = dict()
@@ -25,6 +28,7 @@ def traiter_requete_connection(donnees: bytes):
 
     sessions_par_id[id_session] = {
         "utilisateur": utilisateur,
+        "timestamp": datetime.datetime.now(),
     }
 
     return f"session={id_session}"
@@ -45,6 +49,11 @@ def authentifier_headers(cookies):
         return None
     
     session = sessions_par_id[id_session]
+
+    age = datetime.datetime.now() - session["timestamp"]
+
+    if age.days > AGE_MAX_SESSION_JOURS:
+        return None
 
     return session["utilisateur"]
 
