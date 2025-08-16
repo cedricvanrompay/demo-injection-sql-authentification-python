@@ -49,7 +49,18 @@
             const pseudo = data.get("pseudo");
 
             fetch(`/api/utilisateurs?pseudo=${pseudo}`)
-                .then(reponse => reponse.json())
+                .catch(() => ({}))
+                .then(reponse => {
+                    if (reponse.ok) {
+                        return reponse.json()
+                    } else {
+                        return {
+                            erreur: {
+                                code: reponse.status,
+                            }
+                        }
+                    }
+                })
                 .then(utilisateurs => {
                     const ancienneListe = document.getElementById("liste-utilisateurs");
                     if (ancienneListe != undefined) {
@@ -58,9 +69,13 @@
 
                     let listeUtilisateurs;
 
-                    if (!utilisateurs || utilisateurs.length == 0) {
+
+                    if (utilisateurs.erreur) {
                         listeUtilisateurs = document.createElement("p");
-                        listeUtilisateurs.innerText("aucun utilisateur trouvé.")
+                        listeUtilisateurs.innerText = `Erreur (code ${utilisateurs.erreur.code})`
+                    } else if (!utilisateurs || utilisateurs.length == 0) {
+                        listeUtilisateurs = document.createElement("p");
+                        listeUtilisateurs.innerText = "aucun utilisateur trouvé."
                     } else {
                         listeUtilisateurs = document.createElement("ul");
                         for (const utilisateur of utilisateurs) {
